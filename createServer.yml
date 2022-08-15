@@ -11,6 +11,10 @@
     #     path: /root/servers/server{{ serverId }}/docker-compose.yml
     #     regexp: "8080:8080"
     #     replace: "808{{ serverId }}:8080"
+    - name: Restart docker
+      service:
+        name: docker
+        state: restarted
     - name: Docker Compose up
       command: chdir=/root/servers/ docker-compose up -d server{{ serverId }}
     - name: Add the location block in nginx config file
