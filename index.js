@@ -11,20 +11,24 @@ app.use(cors({ maxAge: 86400 }));
 
 app.post("/", (req, res) => {
   console.log(req.body);
-  exec(
-    `ansible-playbook ${req.body.playbook} -u root --extra-vars \"serverId=${req.body.serverId}\"`,
-    (err, stdout, stderr) => {
-      if (err) {
-        // node couldn't execute the command
-        res.send(err);
-      }
+  try {
+    exec(
+      `ansible-playbook ${req.body.playbook} -u root --extra-vars \"serverId=${req.body.serverId}\"`,
+      (err, stdout, stderr) => {
+        if (err) {
+          // node couldn't execute the command
+          res.send(err);
+        }
 
-      // the *entire* stdout and stderr (buffered)
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-      res.send(stdout);
-    }
-  );
+        // the *entire* stdout and stderr (buffered)
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        res.send(stdout);
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 app.listen(port, () => {
