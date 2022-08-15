@@ -1,0 +1,39 @@
+---
+- hosts: all
+  tasks:
+    # - name: Clone a github repository
+    #   git:
+    #     repo: https://github.com/avp1598/partical-client-docker.git
+    #     dest: /root/servers/server{{ serverId }}
+    #     clone: yes
+    # - name: Update the server ports in docker-compose file
+    #   replace:
+    #     path: /root/servers/server{{ serverId }}/docker-compose.yml
+    #     regexp: "8080:8080"
+    #     replace: "808{{ serverId }}:8080"
+    # - name: Update the redis ports in docker-compose file
+    #   replace:
+    #     path: /root/servers/server{{ serverId }}/docker-compose.yml
+    #     regexp: "6379:6379"
+    #     replace: "638{{ serverId }}:6379"
+    - name: Docker Compose up
+      command: chdir=/root/servers/server{{ serverId }} docker-compose up -d
+    # - name: Add the location block in nginx config file
+    #   blockinfile:
+    #     path: /etc/nginx/sites-available/default
+    #     marker: "# Server{{ serverId }} ANSIBLE MANAGED BLOCK"
+    #     block: |
+    #       location /server{{ serverId }} {
+    #           rewrite ^/server{{ serverId }}(.*)$ $1 break;
+    #           proxy_pass http://localhost:808{{ serverId }};
+    #           proxy_http_version 1.1;
+    #           proxy_set_header Upgrade $http_upgrade;
+    #           proxy_set_header Connection 'upgrade';
+    #           proxy_set_header Host $host;
+    #           proxy_cache_bypass $http_upgrade;
+    #       }
+    #     insertafter: "# Server0 ANSIBLE MANAGED BLOCK"
+    # - name: Restart nginx
+    #   service:
+    #     name: nginx
+    #     state: restarted
