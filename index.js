@@ -9,6 +9,10 @@ app.use(bodyParser.json({ limit: "8mb" }));
 app.use(bodyParser.urlencoded({ limit: "8mb", extended: false }));
 app.use(cors({ maxAge: 86400 }));
 
+app.get("/", (req, res) => {
+  res.send("Hello World!!");
+});
+
 app.post("/", (req, res) => {
   console.log(req.body);
   try {
