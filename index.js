@@ -13,11 +13,33 @@ app.get("/", (req, res) => {
   res.send("Hello World!!");
 });
 
-app.post("/", (req, res) => {
+app.post("/createServer", (req, res) => {
   console.log(req.body);
   try {
     exec(
-      `ansible-playbook ${req.body.playbook} -u root --extra-vars \"serverId=${req.body.serverId}\"`,
+      `ansible-playbook createServer.yml -u root --extra-vars \"serverId=${req.body.serverId}\"`,
+      (err, stdout, stderr) => {
+        if (err) {
+          // node couldn't execute the command
+          res.send(err);
+        }
+
+        // the *entire* stdout and stderr (buffered)
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        res.send(stdout);
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+});
+
+app.post("/createCustom", (req, res) => {
+  console.log(req.body);
+  try {
+    exec(
+      `ansible-playbook createCustom.yml -u root --extra-vars \"serverId=${req.body.serverId} githubRepo=${req.body.githubRepo}\" `,
       (err, stdout, stderr) => {
         if (err) {
           // node couldn't execute the command
