@@ -1,10 +1,8 @@
 ---
 - hosts: all
   tasks:
-    - name: Pull a github repository
-      git:
-        repo: "{{ githubRepo }}"
-        dest: /root/custom/server{{ serverId }}
+    - name: Git pull
+      command: chdir=/root/custom/server{{ serverId }} git pull
     # - name: Update the server ports in docker-compose file
     #   replace:
     #     path: /root/custom/server{{ serverId }}/docker-compose.yml
