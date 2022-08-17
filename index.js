@@ -57,6 +57,28 @@ app.post("/createCustom", (req, res) => {
   }
 });
 
+app.post("/updateCustom", (req, res) => {
+  console.log(req.body);
+  try {
+    exec(
+      `ansible-playbook updateCustom.yml -u root --extra-vars \"serverId=${req.body.serverId}\" `,
+      (err, stdout, stderr) => {
+        if (err) {
+          // node couldn't execute the command
+          res.send(err);
+        }
+
+        // the *entire* stdout and stderr (buffered)
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        res.send(stdout);
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
