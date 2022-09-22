@@ -1,0 +1,46 @@
+---
+- hosts: all
+  tasks:
+    - name: allow port 3000
+      ufw:
+        rule: allow
+        port: "3000"
+    - name: install daemon package
+      apt:
+        name: daemon
+        state: present
+    - name: Download surf client
+      get_url:
+        url: https://bafybeihkkvahudp37vxnzamo2twb2mtlaam6jseouodwhz4i7cowbcaihu.ipfs.gateway.valist.io/ipfs/bafybeihkkvahudp37vxnzamo2twb2mtlaam6jseouodwhz4i7cowbcaihu/surf-linux
+        dest: /usr/local/bin/surf
+        mode: 0755
+    - name: Clone the database repository
+      git:
+        repo: https://github.com/surfDB/surfDatabaseDocker
+        dest: /root/surfDatabase
+        clone: yes
+    - name: Docker Compose up
+      command: chdir=/root/surfDatabase docker-compose up -d
+    - name: Clone the ceramic repository
+      git:
+        repo: https://github.com/surfDB/ceramic-ipfs-docker
+        dest: /root/ceramic
+        clone: yes
+    - name: create env variable file
+      copy:
+        content: |
+          IPFS_S3_REGION={{ IPFS_S3_REGION }}
+          IPFS_S3_BUCKET_NAME={{ IPFS_S3_BUCKET_NAME }}
+          IPFS_S3_ACCESS_KEY_ID={{ IPFS_S3_ACCESS_KEY_ID }}
+          IPFS_S3_SECRET_ACCESS_KEY={{ IPFS_S3_SECRET_ACCESS_KEY }}
+          IPFS_S3_REGION_ENDPOINT={{ IPFS_S3_REGION_ENDPOINT }}
+        dest: /root/ceramic/.env
+    - name: Docker Compose up
+      command: chdir=/root/ceramic docker-compose up -d
+    - name: Run surf client
+      shell: daemon --name surf --inherit --chdir=/root/surfDatabase --output=/root/surfDatabase/surf.log --errlog=/root/surfDatabase/surf.err -- surf
+      environment:
+        IPFS_URI: http://localhost:5001
+        CERAMIC_URI: http://localhost:7007
+        SURF_PORT: 3000
+        SEED: "{{ seed }}"

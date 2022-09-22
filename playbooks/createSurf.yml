@@ -1,0 +1,28 @@
+---
+- hosts: all
+  tasks:
+    - name: allow port 3000
+      ufw:
+        rule: allow
+        port: "3000"
+    - name: install daemon package
+      apt:
+        name: daemon
+        state: present
+    - name: Download surf client
+      get_url:
+        url: https://bafybeihkkvahudp37vxnzamo2twb2mtlaam6jseouodwhz4i7cowbcaihu.ipfs.gateway.valist.io/ipfs/bafybeihkkvahudp37vxnzamo2twb2mtlaam6jseouodwhz4i7cowbcaihu/surf-linux
+        dest: /usr/local/bin/surf
+        mode: 0755
+    - name: Clone the database repository
+      git:
+        repo: https://github.com/surfDB/surfDatabaseDocker
+        dest: /root/surfDatabase
+        clone: yes
+    - name: Docker Compose up
+      command: chdir=/root/surfDatabase docker-compose up -d
+    - name: Run surf client
+      shell: daemon --name surf --inherit --chdir=/root/surfDatabase --output=/root/surfDatabase/surf.log --errlog=/root/surfDatabase/surf.err -- surf
+      environment:
+        SURF_PORT: 3000
+        SEED: "{{ seed }}"

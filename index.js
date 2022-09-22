@@ -13,11 +13,49 @@ app.get("/", (req, res) => {
   res.send("Hello World!!");
 });
 
-app.post("/createServer", (req, res) => {
-  console.log(req.body);
+app.post("/createSurf", (req, res) => {
+  // generate random seed
+  const seed = Math.floor(Math.random() * 1000000000);
   try {
     exec(
-      `ansible-playbook createServer.yml -u root --extra-vars \"serverId=${req.body.serverId}\"`,
+      `echo ${req.body.ip} > ${
+        req.body.ip
+      } && ansible-playbook playbooks/createSurf.yml -u root --extra-vars \"seed=${seed.toString()}\" -i ${
+        req.body.ip
+      } && rm ${req.body.ip}`,
+      (err, stdout, stderr) => {
+        if (err) {
+          // node couldn't execute the command
+          res.send(err);
+        }
+
+        // the *entire* stdout and stderr (buffered)
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        res.send(stdout);
+      }
+    );
+  } catch (err) {
+    res.send(err);
+  }
+});
+
+app.post("/createCeramic", (req, res) => {
+  // generate random seed
+  const seed = Math.floor(Math.random() * 1000000000);
+  try {
+    exec(
+      `echo ${req.body.ip} > ${
+        req.body.ip
+      } && ansible-playbook playbooks/createCeramic.yml -u root --extra-vars \"seed=${seed.toString()} IPFS_S3_REGION=${
+        req.body.region
+      } IPFS_S3_BUCKET_NAME=${req.body.bucket} IPFS_S3_ACCESS_KEY_ID=${
+        req.body.accessKeyId
+      } IPFS_S3_SECRET_ACCESS_KEY=${
+        req.body.secretAccessKey
+      } IPFS_S3_REGION_ENDPOINT=${req.body.endpoint}\" -i ${
+        req.body.ip
+      } && rm ${req.body.ip}`,
       (err, stdout, stderr) => {
         if (err) {
           // node couldn't execute the command
