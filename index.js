@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 app.post("/createSurf", (req, res) => {
   // generate random seed
   const seed = Math.floor(Math.random() * 1000000000);
+  console.log(req.body);
   try {
     exec(
       `echo ${req.body.ip} > ${
@@ -43,6 +44,7 @@ app.post("/createSurf", (req, res) => {
 app.post("/createCeramic", (req, res) => {
   // generate random seed
   const seed = Math.floor(Math.random() * 1000000000);
+  console.log(req.body);
   try {
     exec(
       `echo ${req.body.ip} > ${
