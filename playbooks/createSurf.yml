@@ -11,7 +11,7 @@
         state: present
     - name: Download surf client
       get_url:
-        url: https://bafybeiglsoezey24a6eu6jbkvs4qdcjcz6asq7ds224c6dukhiigyvtdo4.ipfs.gateway.valist.io/ipfs/bafybeiglsoezey24a6eu6jbkvs4qdcjcz6asq7ds224c6dukhiigyvtdo4/surf-linux
+        url: https://bafybeihorgoj25jmueo4qvg53ioh5i6knbilqnpilywxmm546outgrrpuy.ipfs.gateway.valist.io/ipfs/bafybeihorgoj25jmueo4qvg53ioh5i6knbilqnpilywxmm546outgrrpuy/surf-linux
         dest: /usr/local/bin/surf
         mode: 0755
     - name: Clone the database repository
