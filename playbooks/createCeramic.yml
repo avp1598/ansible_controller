@@ -34,7 +34,6 @@
           IPFS_S3_ACCESS_KEY_ID={{ IPFS_S3_ACCESS_KEY_ID }}
           IPFS_S3_SECRET_ACCESS_KEY={{ IPFS_S3_SECRET_ACCESS_KEY }}
           IPFS_S3_REGION_ENDPOINT={{ IPFS_S3_REGION_ENDPOINT }}
-          PEER_IP={{ PEER_IP }}
         dest: /root/ceramic/.env
     - name: Docker Compose up
       command: chdir=/root/ceramic docker-compose up -d
@@ -45,3 +44,4 @@
         CERAMIC_URI: http://localhost:7007
         SURF_PORT: 3000
         SEED: "{{ seed }}"
+        PEER_IP: "{{ PEER_IP }}"
