@@ -25,5 +25,5 @@
       shell: daemon --name surf --inherit --chdir=/root/surfDatabase --output=/root/surfDatabase/surf.log --errlog=/root/surfDatabase/surf.err -- surf
       environment:
         SURF_PORT: 3000
-        PEER_IP: "{{ peerIP }}"
+        PEER_IP: "http://{{ peerIP }}:3000"
         SEED: "{{ seed }}"
