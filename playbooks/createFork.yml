@@ -21,27 +21,9 @@
         clone: yes
     - name: Docker Compose up
       command: chdir=/root/surfDatabase docker-compose up -d
-    - name: Clone the ceramic repository
-      git:
-        repo: https://github.com/surfDB/ceramic-ipfs-docker
-        dest: /root/ceramic
-        clone: yes
-    - name: create env variable file
-      copy:
-        content: |
-          IPFS_S3_REGION={{ IPFS_S3_REGION }}
-          IPFS_S3_BUCKET_NAME={{ IPFS_S3_BUCKET_NAME }}
-          IPFS_S3_ACCESS_KEY_ID={{ IPFS_S3_ACCESS_KEY_ID }}
-          IPFS_S3_SECRET_ACCESS_KEY={{ IPFS_S3_SECRET_ACCESS_KEY }}
-          IPFS_S3_REGION_ENDPOINT={{ IPFS_S3_REGION_ENDPOINT }}
-        dest: /root/ceramic/.env
-    - name: Docker Compose up
-      command: chdir=/root/ceramic docker-compose up -d
     - name: Run surf client
       shell: daemon --name surf --inherit --chdir=/root/surfDatabase --output=/root/surfDatabase/surf.log --errlog=/root/surfDatabase/surf.err -- surf
       environment:
-        IPFS_URI: http://localhost:5001
-        CERAMIC_URI: http://localhost:7007
         SURF_PORT: 3000
+        PEER_IP: "{{ peerIP }}"
         SEED: "{{ seed }}"
-        PEER_IP: "http://{{ PEER_IP }}:3000"
