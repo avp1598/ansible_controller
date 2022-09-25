@@ -45,16 +45,18 @@ app.post("/createCeramic", (req, res) => {
   // generate random seed
   const seed = Math.floor(Math.random() * 1000000000);
   console.log(req.body);
+  let file = "playbooks/createCeramic.yml";
+  if (req.body.peerIP) file = "playbooks/createFork.yml";
   try {
     exec(
       `echo ${req.body.ip} > ${
         req.body.ip
-      } && ansible-playbook playbooks/createCeramic.yml -u root --extra-vars \"seed=${seed.toString()} IPFS_S3_REGION=${
+      } && ansible-playbook ${file} -u root --extra-vars \"seed=${seed.toString()} IPFS_S3_REGION=${
         req.body.region
       } IPFS_S3_BUCKET_NAME=${req.body.bucket} IPFS_S3_ACCESS_KEY_ID=${
         req.body.accessKeyId
       } IPFS_S3_SECRET_ACCESS_KEY=${req.body.secretAccessKey} PEER_IP=${
-        req.body.peerIP || ""
+        req.body.peerIP
       } IPFS_S3_REGION_ENDPOINT=${req.body.endpoint}\"
        -i ${req.body.ip} && rm ${req.body.ip}`,
       (err, stdout, stderr) => {
