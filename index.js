@@ -53,11 +53,10 @@ app.post("/createCeramic", (req, res) => {
         req.body.region
       } IPFS_S3_BUCKET_NAME=${req.body.bucket} IPFS_S3_ACCESS_KEY_ID=${
         req.body.accessKeyId
-      } IPFS_S3_SECRET_ACCESS_KEY=${
-        req.body.secretAccessKey
-      } IPFS_S3_REGION_ENDPOINT=${req.body.endpoint}\" -i ${
-        req.body.ip
-      } && rm ${req.body.ip}`,
+      } IPFS_S3_SECRET_ACCESS_KEY=${req.body.secretAccessKey} PEER_IP=${
+        req.body.peerIP
+      } IPFS_S3_REGION_ENDPOINT=${req.body.endpoint}\"
+       -i ${req.body.ip} && rm ${req.body.ip}`,
       (err, stdout, stderr) => {
         if (err) {
           // node couldn't execute the command
