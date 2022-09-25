@@ -44,4 +44,4 @@
         CERAMIC_URI: http://localhost:7007
         SURF_PORT: 3000
         SEED: "{{ seed }}"
-        PEER_IP: http://{{ PEER_IP }}:3000
+        PEER_IP: "{{ PEER_IP }}"
